@@ -1,0 +1,133 @@
+//
+//  TaskCreate.swift
+//  bomb
+//
+//  Created by emdas93 on 4/27/25.
+//
+import SwiftUI
+
+struct TaskCreateView: View {
+    @State var step: Int = 1
+    @State var bombDegrees: Double = 0
+    @State var backgroundBombDegrees: Double = 280
+    
+    let formatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "M/d" // "5/1" 이런 스타일
+        return f
+    }()
+    
+    
+    // Test Data
+    let tasks: [String] = [
+        "자료조사", "개요작성", "디자인", "최종화"
+    ]
+    
+    var body: some View {
+        GeometryReader { geometry in
+            
+            let width = geometry.size.width
+            let height = geometry.size.height
+            
+            // -------------------------------------------------------------------
+            // 배경화면
+            // -------------------------------------------------------------------
+            ZStack {
+                Image("background")
+                    .resizable()
+                    .ignoresSafeArea(edges: .all)
+                
+                Image("bomb")
+                    .resizable()
+                    .rotationEffect(.degrees(backgroundBombDegrees))
+                    .frame(width: 1000, height: 1000)
+                    .position(x: width, y: height)
+                    
+                // -------------------------------------------------------------------
+                // Step 1
+                // -------------------------------------------------------------------
+                if step == 1 {
+                    TaskCreateStep1View()
+                        .frame(width: width - 20, height: 300, alignment: .top)
+                        .background(Color.init(hex: "151515").opacity(0.2).blur(radius: 30))
+                        .cornerRadius(20)
+                }
+                // -------------------------------------------------------------------
+                // Step 2
+                // -------------------------------------------------------------------
+                if step == 2 {
+                    TaskCreateStep2View()
+                        .frame(width: width - 20, height: 300, alignment: .top)
+                        .background(Color.init(hex: "151515").opacity(0.2).blur(radius: 30))
+                        .cornerRadius(20)
+                }
+                
+                // -------------------------------------------------------------------
+                // Step 3
+                // -------------------------------------------------------------------
+                if step == 3 {
+                    TaskCreateStep3View()
+                        .frame(width: width - 20, height: 300, alignment: .top)
+                        .background(Color.init(hex: "151515").opacity(0.2).blur(radius: 30))
+                        .cornerRadius(20)
+                }
+                
+                // -------------------------------------------------------------------
+                // Step 4
+                // -------------------------------------------------------------------
+                if step == 4 {
+                    TaskCreateStep4View()
+                }
+                
+                // 하단 버튼 수정
+                VStack {
+                    Spacer()
+                    
+                    HStack {
+                        Button(action: {
+                            if step > 1 {
+                                withAnimation(.easeInOut) {
+                                    step -= 1
+                                    backgroundBombDegrees -= 10
+                                }
+                            }
+                        }) {
+                            Text("이전")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(.white)
+                                .frame(width: 120, height: 50)
+                                .background(Color.gray.opacity(0.8))
+                                .cornerRadius(15)
+                        }
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            if step < 4 {
+                                withAnimation(.easeInOut) {
+                                    step += 1
+                                    backgroundBombDegrees += 10
+                                }
+                            }
+                        }) {
+                            Text("다음")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(.white)
+                                .frame(width: 120, height: 50)
+                                .background(Color.blue.opacity(0.8))
+                                .cornerRadius(15)
+                        }
+                    }
+                    .padding(.horizontal, 40)
+                    .padding(.bottom, 30)
+                }
+
+                
+            }
+        }
+    }
+}
+
+#Preview {
+    TaskCreateView()
+}
