@@ -15,12 +15,10 @@ final class CategoryModel {
     var title: String
     var createdAt: Date
     var updatedAt: Date
-    var userId: Int?
 
-    init(id: Int = Int(Date().timeIntervalSince1970), title: String, userId: Int? = nil) {
+    init(id: Int, title: String) {
         self.id = id
         self.title = title
-        self.userId = userId
         let now = Date()
         self.createdAt = now
         self.updatedAt = now
@@ -38,7 +36,7 @@ final class ItemModel {
     var categoryId: Int?
     var isDeleted: Bool = false
 
-    init(id: Int = Int(Date().timeIntervalSince1970), title: String, color: String, categoryId: Int? = nil) {
+    init(id: Int, title: String, color: String = "000000", categoryId: Int? = nil) {
         self.id = id
         self.title = title
         self.color = color
@@ -62,7 +60,7 @@ final class TaskModel {
     var itemId: Int?
     var dayId: Int?
 
-    init(id: Int = Int(Date().timeIntervalSince1970), title: String, color: String, isDone: Bool = false, password: Int, itemId: Int? = nil, dayId: Int? = nil) {
+    init(id: Int, title: String, color: String, isDone: Bool = false, password: Int, itemId: Int? = nil, dayId: Int? = nil) {
         self.id = id
         self.title = title
         self.color = color
@@ -86,7 +84,7 @@ final class BombModel {
     var updatedAt: Date
     var dayId: Int?
 
-    init(id: Int = Int(Date().timeIntervalSince1970), password: String, state: Int = 0, dayId: Int? = nil) {
+    init(id: Int, password: String, state: Int = 0, dayId: Int? = nil) {
         self.id = id
         self.password = password
         self.state = state

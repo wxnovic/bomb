@@ -5,11 +5,24 @@
 //  Created by emdas93 on 4/27/25.
 //
 import SwiftUI
+import SwiftData
+
+class TaskFormData: ObservableObject {
+    @Published var categoryId: Int?
+    @Published var dayCount: Int?
+    @Published var itemIds: ArraySlice<Int> = []
+}
 
 struct TaskCreateView: View {
+    @StateObject private var formData: TaskFormData = TaskFormData()
+    
+    @Environment(\.modelContext) private var modelContext
+    
     @State var step: Int = 1
     @State var bombDegrees: Double = 0
     @State var backgroundBombDegrees: Double = 280
+    
+    
     
     let formatter: DateFormatter = {
         let f = DateFormatter()
@@ -47,7 +60,7 @@ struct TaskCreateView: View {
                 // Step 1
                 // -------------------------------------------------------------------
                 if step == 1 {
-                    TaskCreateStep1View()
+                    TaskCreateStep1View(formData: formData)
                         .frame(width: width - 20, height: 300, alignment: .top)
                         .background(Color.init(hex: "151515").opacity(0.2).blur(radius: 30))
                         .cornerRadius(20)
@@ -55,18 +68,20 @@ struct TaskCreateView: View {
                 // -------------------------------------------------------------------
                 // Step 2
                 // -------------------------------------------------------------------
-                if step == 2 {
-                    TaskCreateStep2View()
-                        .frame(width: width - 20, height: 300, alignment: .top)
-                        .background(Color.init(hex: "151515").opacity(0.2).blur(radius: 30))
-                        .cornerRadius(20)
+                else if step == 2 {
+                    if(formData.categoryId != -1) {
+                        TaskCreateStep2View(formData: formData)
+                            .frame(width: width - 20, height: 300, alignment: .top)
+                            .background(Color.init(hex: "151515").opacity(0.2).blur(radius: 30))
+                            .cornerRadius(20)
+                    }
                 }
                 
                 // -------------------------------------------------------------------
                 // Step 3
                 // -------------------------------------------------------------------
-                if step == 3 {
-                    TaskCreateStep3View()
+                else if step == 3 {
+                    TaskCreateStep3View(formData: formData)
                         .frame(width: width - 20, height: 300, alignment: .top)
                         .background(Color.init(hex: "151515").opacity(0.2).blur(radius: 30))
                         .cornerRadius(20)
@@ -75,8 +90,8 @@ struct TaskCreateView: View {
                 // -------------------------------------------------------------------
                 // Step 4
                 // -------------------------------------------------------------------
-                if step == 4 {
-                    TaskCreateStep4View()
+                else if step == 4 {
+                    TaskCreateStep4View(formData: formData)
                 }
                 
                 // 하단 버튼 수정

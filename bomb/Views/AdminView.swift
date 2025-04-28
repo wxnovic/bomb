@@ -13,278 +13,187 @@ struct AdminView: View {
     
     @Query private var categories: [CategoryModel]
     @Query private var items: [ItemModel]
-    @Query private var tasks: [TaskModel]
-    @Query private var bombs: [BombModel]
     
-    // 입력 필드들
-    @State private var categoryTitle = ""
-    @State private var categoryUserId = ""
+    @State private var categoryName: String = ""
     
-    @State private var itemTitle = ""
-    @State private var itemColor = ""
-    @State private var itemCategoryId = ""
-    
-    @State private var taskTitle = ""
-    @State private var taskColor = ""
-    @State private var taskPassword = ""
-    @State private var taskItemId = ""
-    @State private var taskDayId = ""
-    
-    @State private var bombPassword = ""
-    @State private var bombState = ""
-    @State private var bombDayId = ""
+    @State private var itemName: String = ""
+    @State private var itemColor: String = "000000"
+    @State private var itemCategoryId: Int? = nil
     
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: 40) {
+        ScrollView {
+            VStack(spacing: 40) {
+                
+                // ------------------------
+                // 카테고리 추가
+                // ------------------------
+                SectionBox(title: "카테고리 추가") {
+                    TextField("카테고리 이름", text: $categoryName)
+                        .textFieldStyle(.roundedBorder)
                     
-                    // Category
-                    VStack(alignment: .leading, spacing: 15) {
-                        Text("Category").font(.title2).bold()
-                        
-                        TextField("Title", text: $categoryTitle)
-                            .textFieldStyle(.roundedBorder)
-                        TextField("UserId (선택)", text: $categoryUserId)
-                            .textFieldStyle(.roundedBorder)
-                            .keyboardType(.numberPad)
-                        
-                        Button("카테고리 추가", action: addCategory)
-                            .buttonStyle(.borderedProminent)
-                        
-                        Divider()
-                        ForEach(categories) { category in
-                            HStack {
-                                Text("\(category.title) (userId: \(category.userId?.description ?? "-"))")
-                                Spacer()
-                                Button(role: .destructive) {
-                                    context.delete(category)
-                                } label: {
-                                    Image(systemName: "trash")
-                                }
-                            }
-                        }
-                    }
-                    
-                    // Item
-                    VStack(alignment: .leading, spacing: 15) {
-                        Text("Item").font(.title2).bold()
-                        
-                        TextField("Title", text: $itemTitle)
-                            .textFieldStyle(.roundedBorder)
-                        TextField("Color", text: $itemColor)
-                            .textFieldStyle(.roundedBorder)
-                        TextField("CategoryId (선택)", text: $itemCategoryId)
-                            .textFieldStyle(.roundedBorder)
-                            .keyboardType(.numberPad)
-                        
-                        Button("아이템 추가", action: addItem)
-                            .buttonStyle(.borderedProminent)
-                        
-                        Divider()
-                        ForEach(items) { item in
-                            HStack {
-                                Text("\(item.title) (\(item.color))")
-                                Spacer()
-                                Button(role: .destructive) {
-                                    context.delete(item)
-                                } label: {
-                                    Image(systemName: "trash")
-                                }
-                            }
-                        }
-                    }
-                    
-                    // Task
-                    VStack(alignment: .leading, spacing: 15) {
-                        Text("Task").font(.title2).bold()
-                        
-                        TextField("Title", text: $taskTitle)
-                            .textFieldStyle(.roundedBorder)
-                        TextField("Color", text: $taskColor)
-                            .textFieldStyle(.roundedBorder)
-                        TextField("Password(숫자)", text: $taskPassword)
-                            .textFieldStyle(.roundedBorder)
-                            .keyboardType(.numberPad)
-                        TextField("ItemId (선택)", text: $taskItemId)
-                            .textFieldStyle(.roundedBorder)
-                            .keyboardType(.numberPad)
-                        TextField("DayId (선택)", text: $taskDayId)
-                            .textFieldStyle(.roundedBorder)
-                            .keyboardType(.numberPad)
-                        
-                        Button("태스크 추가", action: addTask)
-                            .buttonStyle(.borderedProminent)
-                        
-                        Divider()
-                        ForEach(tasks) { task in
-                            HStack {
-                                Text("\(task.title) (\(task.color))")
-                                Spacer()
-                                Button(role: .destructive) {
-                                    context.delete(task)
-                                } label: {
-                                    Image(systemName: "trash")
-                                }
-                            }
-                        }
-                    }
-                    
-                    // Bomb
-                    VStack(alignment: .leading, spacing: 15) {
-                        Text("Bomb").font(.title2).bold()
-                        
-                        TextField("Password", text: $bombPassword)
-                            .textFieldStyle(.roundedBorder)
-                        TextField("State(숫자)", text: $bombState)
-                            .textFieldStyle(.roundedBorder)
-                            .keyboardType(.numberPad)
-                        TextField("DayId (선택)", text: $bombDayId)
-                            .textFieldStyle(.roundedBorder)
-                            .keyboardType(.numberPad)
-                        
-                        Button("폭탄 추가", action: addBomb)
-                            .buttonStyle(.borderedProminent)
-                        
-                        Divider()
-                        ForEach(bombs) { bomb in
-                            HStack {
-                                Text("\(bomb.password) (state: \(bomb.state))")
-                                Spacer()
-                                Button(role: .destructive) {
-                                    context.delete(bomb)
-                                } label: {
-                                    Image(systemName: "trash")
-                                }
-                            }
-                        }
+                    Button(action: addCategory) {
+                        Text("카테고리 추가")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.blue.opacity(0.7))
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
                     }
                 }
-                .padding()
+                
+                // ------------------------
+                // 카테고리 리스트
+                // ------------------------
+                SectionBox(title: "카테고리 목록") {
+                    if categories.isEmpty {
+                        Text("등록된 카테고리가 없습니다.")
+                            .foregroundColor(.gray)
+                    } else {
+                        List {
+                            ForEach(categories) { category in
+                                VStack(alignment: .leading) {
+                                    Text(category.title)
+                                        .font(.headline)
+                                    Text("ID: \(category.id)")
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+                                }
+                            }
+                            .onDelete(perform: deleteCategories)
+                        }
+                        .frame(height: 300)
+                        .listStyle(.plain)
+                    }
+                }
+                
+                // ------------------------
+                // 아이템 추가
+                // ------------------------
+                SectionBox(title: "아이템 추가") {
+                    TextField("아이템 이름", text: $itemName)
+                        .textFieldStyle(.roundedBorder)
+                    
+                    TextField("색상 (예: FF0000)", text: $itemColor)
+                        .textFieldStyle(.roundedBorder)
+                    
+                    Picker("카테고리 선택", selection: $itemCategoryId) {
+                        Text("카테고리 없음").tag(Int?.none) // 선택 안 한 경우
+                        
+                        ForEach(categories) { category in
+                            Text("\(category.title) (ID: \(category.id))")
+                                .tag(Int?.some(category.id))
+                        }
+                    }
+                    .pickerStyle(.menu) // 드롭다운 스타일
+                    
+                    Button(action: addItem) {
+                        Text("아이템 추가")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.green.opacity(0.7))
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                }
+
+                
+                // ------------------------
+                // 아이템 리스트
+                // ------------------------
+                SectionBox(title: "아이템 목록") {
+                    if items.isEmpty {
+                        Text("등록된 아이템이 없습니다.")
+                            .foregroundColor(.gray)
+                    } else {
+                        List {
+                            ForEach(items) { item in
+                                VStack(alignment: .leading) {
+                                    Text(item.title)
+                                        .font(.headline)
+                                    Text("ID: \(item.id) / 색상: #\(item.color) / 카테고리 ID: \(item.categoryId?.description ?? "없음")")
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+                                }
+                            }
+                            .onDelete(perform: deleteItems)
+                        }
+                        .frame(height: 300)
+                        .listStyle(.plain)
+                    }
+                }
+                
             }
-            .navigationTitle("Admin Panel")
+            .padding()
         }
     }
     
-    // MARK: - 추가 함수
+    // ------------------------
+    // 카테고리 추가
+    // ------------------------
     private func addCategory() {
+        guard !categoryName.isEmpty else { return }
+        
         let newCategory = CategoryModel(
-            title: categoryTitle,
-            userId: Int(categoryUserId)
+            id: (categories.map { $0.id }.max() ?? -1) + 1,
+            title: categoryName
         )
         context.insert(newCategory)
-        categoryTitle = ""
-        categoryUserId = ""
+        try? context.save()
+        
+        categoryName = ""
     }
     
+    // ------------------------
+    // 아이템 추가
+    // ------------------------
     private func addItem() {
+        guard !itemName.isEmpty else { return }
+        
         let newItem = ItemModel(
-            title: itemTitle,
+            id: (items.map { $0.id }.max() ?? -1) + 1,
+            title: itemName,
             color: itemColor,
-            categoryId: Int(itemCategoryId)
+            categoryId: itemCategoryId
         )
         context.insert(newItem)
-        itemTitle = ""
-        itemColor = ""
-        itemCategoryId = ""
+        try? context.save()
+        
+        itemName = ""
+        itemColor = "000000"
+        itemCategoryId = nil
     }
     
-    private func addTask() {
-        guard let pw = Int(taskPassword) else { return }
-        let newTask = TaskModel(
-            title: taskTitle,
-            color: taskColor,
-            password: pw,
-            itemId: Int(taskItemId),
-            dayId: Int(taskDayId)
-        )
-        context.insert(newTask)
-        taskTitle = ""
-        taskColor = ""
-        taskPassword = ""
-        taskItemId = ""
-        taskDayId = ""
-    }
-    
-    private func addBomb() {
-        let newBomb = BombModel(
-            password: bombPassword,
-            state: Int(bombState) ?? 0,
-            dayId: Int(bombDayId)
-        )
-        context.insert(newBomb)
-        bombPassword = ""
-        bombState = ""
-        bombDayId = ""
-    }
-}
-
-extension Int {
-    init?(_ string: String) {
-        guard let number = Int(string) else { return nil }
-        self = number
-    }
-}
-
-
-struct EditableItem: Identifiable {
-    let id: Int
-    var value: String
-}
-
-
-struct SectionView: View {
-    var title: String
-    var textFieldPlaceholder: String
-    @Binding var text: String
-    var onAdd: () -> Void
-    var list: [EditableItem]
-    var onUpdate: (Int, String) -> Void
-    var onDelete: (Int) -> Void
-    
-    @State private var editingValues: [Int: String] = [:]
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 15) {
-            Text(title)
-                .font(.title2)
-                .bold()
-            
-            HStack {
-                TextField(textFieldPlaceholder, text: $text)
-                    .textFieldStyle(.roundedBorder)
-                Button("추가", action: onAdd)
-                    .buttonStyle(.borderedProminent)
-            }
-            
-            Divider()
-            
-            ForEach(list) { item in
-                HStack {
-                    TextField("", text: Binding(
-                        get: { editingValues[item.id, default: item.value] },
-                        set: { editingValues[item.id] = $0 }
-                    ))
-                    .textFieldStyle(.roundedBorder)
-                    
-                    Button("저장") {
-                        if let updated = editingValues[item.id] {
-                            onUpdate(item.id, updated)
-                        }
-                    }
-                    .buttonStyle(.bordered)
-                    
-                    Button(role: .destructive) {
-                        onDelete(item.id)
-                    } label: {
-                        Image(systemName: "trash")
-                    }
-                }
-            }
+    // ------------------------
+    // 삭제 함수
+    // ------------------------
+    private func deleteCategories(at offsets: IndexSet) {
+        for index in offsets {
+            context.delete(categories[index])
         }
+        try? context.save()
+    }
+    
+    private func deleteItems(at offsets: IndexSet) {
+        for index in offsets {
+            context.delete(items[index])
+        }
+        try? context.save()
     }
 }
 
-#Preview{
-    AdminView()
+// ------------------------
+// 공통 섹션 박스 뷰
+// ------------------------
+@ViewBuilder
+private func SectionBox<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {
+    VStack(alignment: .leading, spacing: 10) {
+        Text(title)
+            .font(.title3)
+            .bold()
+        
+        content()
+    }
+    .padding()
+    .background(Color(UIColor.secondarySystemBackground))
+    .cornerRadius(12)
 }

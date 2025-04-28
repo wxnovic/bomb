@@ -5,12 +5,13 @@
 //  Created by emdas93 on 4/27/25.
 //
 import SwiftUI
-
+import SwiftData
 struct TaskCreateStep3View: View {
-    // Test Data
-    let tasks: [String] = [
-        "자료조사", "개요작성", "디자인", "최종화"
-    ]
+    
+    var formData: TaskFormData;
+    @Query private var items: [ItemModel]
+    
+    @State private var selectedItems: ArraySlice<Int> = []
     
     var body: some View {
         VStack {
@@ -27,17 +28,36 @@ struct TaskCreateStep3View: View {
                 ) {
                     
 
-                    ForEach(tasks, id: \.self){ task in
-                        Button(action: {}) {
-                            Text(task)
-                                .padding()
-                                .frame(width: 100, height: 50)
-                                .foregroundColor(.black)
-                                .font(.system(size: 15, weight: .bold, design: .default))
+                    ForEach(items, id: \.self) { item in
+                        Button(action: {
+                            if let index = selectedItems.firstIndex(of: item.id) {
+                                // 이미 선택돼 있으면 제거
+                                selectedItems.remove(at: index)
+                                if let formIndex = formData.itemIds.firstIndex(of: item.id) {
+                                    formData.itemIds.remove(at: formIndex)
+                                }
+                            } else {
+                                // 선택 안 되어 있으면 추가
+                                selectedItems.append(item.id)
+                                formData.itemIds.append(item.id)
+                            }
+                        }) {
+                            VStack {
+                                Text(item.title)
+                                    .padding()
+                                    .frame(width: 100, height: 50)
+                                    .foregroundColor(selectedItems.contains(item.id) ? .white : .black)
+                                    .background(selectedItems.contains(item.id) ?
+                                                Color.init(hex: "0938DF").opacity(0.3).blur(radius: 2) :
+                                                Color.init(hex: "151515").opacity(0.1).blur(radius: 2))
+                                    .cornerRadius(20)
+                            }
+                            
+                            
+                            .font(.system(size: 15, weight: .bold, design: .default))
                         }
-                        .background(Color.init(hex: "151515").opacity(0.1).blur(radius: 2))
-                        .cornerRadius(20)
                     }
+
                     
                     Button(action: {}) {
                         Image(systemName: "plus")
@@ -50,6 +70,8 @@ struct TaskCreateStep3View: View {
                     .cornerRadius(20)
                 }
             }
+        }.onAppear() {
+            selectedItems = formData.itemIds
         }
     }
 }

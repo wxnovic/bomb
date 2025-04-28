@@ -20,20 +20,18 @@ struct ContentView: View {
                         Text("Home")
                     }
                 }
+        
             AdminView()
                 .tabItem {
                     VStack {
-                        Image(systemName: "flame.fill")
-                        Text("Create")
+                        Image(systemName: "apple.fill")
+                        Text("Home")
                     }
                 }
-        }
+            }
         .accentColor(.orange) // 선택된 탭 색상
-        
-        
-        
+        }
     }
-}
 
 #Preview {
     ContentView()
