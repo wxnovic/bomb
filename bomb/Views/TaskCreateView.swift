@@ -10,7 +10,8 @@ import SwiftData
 class TaskFormData: ObservableObject {
     @Published var categoryId: Int?
     @Published var dayCount: Int?
-    @Published var itemIds: ArraySlice<Int> = []
+    @Published var itemIds: [Int] = []
+    @Published var taskTempData: [[Int]] = []
 }
 
 struct TaskCreateView: View {
@@ -29,12 +30,6 @@ struct TaskCreateView: View {
         f.dateFormat = "M/d" // "5/1" 이런 스타일
         return f
     }()
-    
-    
-    // Test Data
-    let tasks: [String] = [
-        "자료조사", "개요작성", "디자인", "최종화"
-    ]
     
     var body: some View {
         GeometryReader { geometry in

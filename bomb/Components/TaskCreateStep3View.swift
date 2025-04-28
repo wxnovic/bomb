@@ -11,7 +11,7 @@ struct TaskCreateStep3View: View {
     var formData: TaskFormData;
     @Query private var items: [ItemModel]
     
-    @State private var selectedItems: ArraySlice<Int> = []
+    @State private var selectedItems: Array<Int> = []
     
     var body: some View {
         VStack {

@@ -55,9 +55,17 @@ struct TaskCreateStep2View: View {
                         }()
                         
                         Button(action: {
+                            formData.itemIds.removeAll()
+                            formData.taskTempData.removeAll()
+                            
                             selectedDayCount = i
                             formData.dayCount = i
-                            formData.itemIds.removeAll()
+                            
+                            if let count = selectedDayCount {
+                                for _ in 0..<count + 1 {
+                                    formData.taskTempData.append([])
+                                }
+                            }
                         }) {
                             VStack(spacing: 2) {
                                 Text(dateFormatter.string(from: date)) // 날짜

@@ -24,7 +24,8 @@ struct TaskCreateStep4View: View {
     @State private var showButtons: [Bool] = Array(repeating: false, count: 8) // 최대치 확보
     @State private var isExpanded: Bool = false
     @State private var selectedButton: Int? = nil
-    @State private var visibleItem: Int? = nil
+    @State private var visibleItemId: Int? = nil
+    
     
     
     
@@ -76,7 +77,7 @@ struct TaskCreateStep4View: View {
                             .background(Color.blue)
                             .cornerRadius(20)
                     }
-                    .opacity(visibleItem == item.id ? 1 : 0)
+                    .opacity(visibleItemId == item.id ? 1 : 0)
                 }
 
                 
@@ -97,19 +98,38 @@ struct TaskCreateStep4View: View {
                     }()
                     
                     Button(action: {
+                        if selectedButton != -1 && selectedButton != nil {
+                            formData.taskTempData[index].append(selectedButton ?? 0)
+                        }
                         
                     }) {
-                        VStack(spacing: 5) {
-                            Text(formatter.string(from: date))
-                                .font(.system(size: 15, weight: .bold, design: .default))
-                            Text(dayString)
-                                .font(.system(size: 13, weight: .regular, design: .default))
+                        ScrollView{
+                            VStack() {
+                                Text(formatter.string(from: date))
+                                    .font(.system(size: 15, weight: .bold, design: .default))
+                                Text(dayString)
+                                    .font(.system(size: 13, weight: .regular, design: .default))
+                                VStack(alignment: .center){
+                                    
+                                    ForEach(formData.taskTempData[index], id: \.self) { item in
+                                        let title = filteredItems.first(where: { $0.id == item })?.title ?? ""
+                                        Text(title)
+                                            .font(.system(size: 10, weight: .regular))
+                                            .background(Color.blue.opacity(0.2))
+                                    }
+                                    
+                                    
+                                }
+    //                            .rotationEffect(.degrees(angle))
+                            }
+                            .foregroundColor(textColor)
+    //                        .rotationEffect(.degrees(-angle))
                         }
-                        .foregroundColor(textColor)
-                        .rotationEffect(.degrees(-angle))
+                        
+                        
                     }
                     .padding()
-                    .frame(width: 70, height: 100)
+                    .frame(width: 70, height: 120, alignment: .top)
                     .background(Color(hex: "151515").opacity(0.1).blur(radius: 2))
                     .cornerRadius(20)
                     .offset(y: showButtons[index] ? -distance : 0)
@@ -117,18 +137,19 @@ struct TaskCreateStep4View: View {
                     .opacity(showButtons[index] ? 1 : 0)
                     .animation(.spring(), value: showButtons[index])
                     
+                    
 
                 }
                 
                 HStack(){
                     Button(action: {
-                        if let currentId = visibleItem,
+                        if let currentId = visibleItemId,
                            let currentIndex = filteredItems.firstIndex(where: { $0.id == currentId }) {
                             
                             let nextIndex = (currentIndex + 1) % filteredItems.count
                             let nextItem = filteredItems[nextIndex]
                             
-                            visibleItem = nextItem.id
+                            visibleItemId = nextItem.id
                             selectedButton = nil
                         }
                     }) {
@@ -138,13 +159,13 @@ struct TaskCreateStep4View: View {
                     Spacer()
                     
                     Button(action: {
-                        if let currentId = visibleItem,
+                        if let currentId = visibleItemId,
                            let currentIndex = filteredItems.firstIndex(where: { $0.id == currentId }) {
                             
                             let previousIndex = (currentIndex - 1 + filteredItems.count) % filteredItems.count
                             let previousItem = filteredItems[previousIndex]
                             
-                            visibleItem = previousItem.id
+                            visibleItemId = previousItem.id
                             selectedButton = nil
                         }
                     }) {
@@ -154,13 +175,13 @@ struct TaskCreateStep4View: View {
                 .padding()
                 .frame(width: 150, height: 50)
                 .background(Color.black.opacity(0.3).cornerRadius(50))
-                .position(x: UIScreen.main.bounds.width / 2, y: 550)
+                .position(x: UIScreen.main.bounds.width / 2, y: 570)
             }
             
         }
         .onAppear {
             toggleButtons(buttonCount: buttonCount) // 등장하자마자 버튼 열기
-            visibleItem = filteredItems.first?.id ?? -1
+            visibleItemId = filteredItems.first?.id ?? -1
         }
         
         
