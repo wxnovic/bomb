@@ -57,6 +57,7 @@ struct TaskCreateStep2View: View {
                         Button(action: {
                             selectedDayCount = i
                             formData.dayCount = i
+                            formData.itemIds.removeAll()
                         }) {
                             VStack(spacing: 2) {
                                 Text(dateFormatter.string(from: date)) // 날짜

@@ -123,9 +123,11 @@ struct TaskCreateView: View {
                                     step += 1
                                     backgroundBombDegrees += 10
                                 }
+                            } else if step == 4 {
+                                
                             }
                         }) {
-                            Text("다음")
+                            Text(step == 4 ? "완료" : "다음")
                                 .font(.system(size: 20, weight: .bold))
                                 .foregroundColor(.white)
                                 .frame(width: 120, height: 50)

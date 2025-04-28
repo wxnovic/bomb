@@ -26,8 +26,6 @@ struct TaskCreateStep3View: View {
                     alignment: .center,
                     spacing: 20
                 ) {
-                    
-
                     ForEach(items, id: \.self) { item in
                         Button(action: {
                             if let index = selectedItems.firstIndex(of: item.id) {
