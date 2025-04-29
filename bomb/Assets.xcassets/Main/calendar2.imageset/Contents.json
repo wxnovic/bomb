@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "Calendar_perspective_matte_s 2.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "Calendar_perspective_matte_s 2 (1).png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "Calendar_perspective_matte_s 2 (2).png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

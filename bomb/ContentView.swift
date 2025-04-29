@@ -11,27 +11,36 @@ import SwiftData
 import SDWebImageSwiftUI
 
 struct ContentView: View {
+    @StateObject var tabRouter = TabRouter()
+
     var body: some View {
-        TabView{
-            TaskCreateView()
+        TabView(selection: $tabRouter.selectedTab) {
+            TaskMainView()
                 .tabItem {
-                    VStack {
-                        Image(systemName: "flame.fill")
-                        Text("Home")
-                    }
+                    Image(systemName: "square.and.arrow.up.on.square.fill")
+                    Text("Main")
                 }
-        
+                .tag(0)
+
+            TaskCreateView()
+                .environmentObject(tabRouter)
+                .tabItem {
+                    Image(systemName: "flame.fill")
+                    Text("Create")
+                }
+                .tag(1)
+
             AdminView()
                 .tabItem {
-                    VStack {
-                        Image(systemName: "apple.fill")
-                        Text("Home")
-                    }
+                    Image(systemName: "apple.fill")
+                    Text("Admin")
                 }
-            }
-        .accentColor(.orange) // 선택된 탭 색상
+                .tag(2)
         }
+        .accentColor(.orange)
     }
+}
+
 
 #Preview {
     ContentView()

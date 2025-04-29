@@ -4,8 +4,23 @@
 //
 //  Created by emdas93 on 4/27/25.
 //
+
+
+
 import SwiftUI
 import SwiftData
+
+class TaskDateData {
+    
+    
+    @Published var id: Int
+    @Published var date: Date
+    
+    init (id: Int, date: Date) {
+        self.id = id
+        self.date = date
+    }
+}
 
 class TaskFormData: ObservableObject {
     @Published var categoryId: Int?
@@ -15,6 +30,7 @@ class TaskFormData: ObservableObject {
 }
 
 struct TaskCreateView: View {
+    @EnvironmentObject var tabRouter: TabRouter
     @StateObject private var formData: TaskFormData = TaskFormData()
     
     @Environment(\.modelContext) private var modelContext
@@ -119,7 +135,9 @@ struct TaskCreateView: View {
                                     backgroundBombDegrees += 10
                                 }
                             } else if step == 4 {
-                                
+                                tabRouter.selectedTab = 0
+                                step = 1
+                                tabRouter.isCompleted = 1
                             }
                         }) {
                             Text(step == 4 ? "완료" : "다음")
