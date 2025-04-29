@@ -147,24 +147,28 @@ struct TaskMainView: View {
 
     @ViewBuilder
     private func taskListView() -> some View {
-        if tabRouter.isCompleted == 1{
+
+        
 
             ScrollView {
                 VStack(spacing: 20) {
-                    ForEach(tasks.chunked(into: 2), id: \.self) { taskRow in
-                        HStack(spacing: 40) {
-                            ForEach(taskRow, id: \.id) { task in
-                                TaskPaper(onDone: {
-                                    setIsDone(Int64(task.id))
-                                }, task: task)
-                            }
-                        }
+                    
+                    HStack(spacing: 40) {
+                        TaskPaper2(title: "자료조사", password: "3")
+                        TaskPaper2(title: "자료정리", password: "0")
+                        
                     }
+                    HStack(spacing: 40) {
+                        TaskPaper2(title: "발표준비", password: "5")
+                        TaskPaper2(title: "대본작성", password: "7")
+                        
+                    }
+                    
                 }
                 .padding(.top, 10)
                 .padding(.horizontal, 16)
             }
-        }
+        
     }
 
     // MARK: - Entering Code Layer

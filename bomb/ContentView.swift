@@ -29,13 +29,21 @@ struct ContentView: View {
                     Text("Create")
                 }
                 .tag(1)
+            
+            TaskCalendar()
+                .environmentObject(tabRouter)
+                .tabItem {
+                    Image(systemName: "calendar.fill")
+                    Text("Calendar")
+                }
+                .tag(2)
 
             AdminView()
                 .tabItem {
                     Image(systemName: "apple.fill")
                     Text("Admin")
                 }
-                .tag(2)
+                .tag(3)
         }
         .accentColor(.orange)
     }
