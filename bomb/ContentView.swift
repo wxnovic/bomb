@@ -17,7 +17,7 @@ struct ContentView: View {
         TabView(selection: $tabRouter.selectedTab) {
             TaskMainView()
                 .tabItem {
-                    Image(systemName: "square.and.arrow.up.on.square.fill")
+                    Image(systemName: "flame.fill")
                     Text("Main")
                 }
                 .tag(0)
@@ -33,17 +33,24 @@ struct ContentView: View {
             TaskCalendar()
                 .environmentObject(tabRouter)
                 .tabItem {
-                    Image(systemName: "calendar.fill")
+                    Image(systemName: "flame.fill")
                     Text("Calendar")
                 }
                 .tag(2)
 
-            AdminView()
+            TaskGView()
+                .environmentObject(tabRouter)
                 .tabItem {
-                    Image(systemName: "apple.fill")
-                    Text("Admin")
+                    Image(systemName: "flame.fill")
+                    Text("GView")
                 }
                 .tag(3)
+            AdminView()
+                .tabItem {
+                    Image(systemName: "flame.fill")
+                    Text("Admin")
+                }
+                .tag(4)
         }
         .accentColor(.orange)
     }
